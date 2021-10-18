@@ -1,3 +1,4 @@
+import os
 import random
 import librosa
 import itertools
@@ -97,3 +98,7 @@ def zero_padding(seq, size, filler=0):
     """
     return list(itertools.islice(itertools.chain(seq, itertools.repeat(filler)), size))
 
+
+def check_dir(path):
+    if os.path.exists(path) is False:
+        os.mkdir(path)
