@@ -3,7 +3,7 @@ import pytorch_lightning as pl
 from torch.nn import functional as F
 
 
-class Engine(pl.LightningModule):
+class ClassificationEngine(pl.LightningModule):
     def __init__(self, backbone, learning_rate=1e-4):
         super().__init__()
         self.save_hyperparameters()
