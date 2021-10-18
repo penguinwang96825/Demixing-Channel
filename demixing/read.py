@@ -7,9 +7,10 @@ from pathlib import Path
 MODULE_PATH = Path(dirname(__file__))
 
 
-HUGGINGFACE_ROOT = '/home/yangwang/.cache/huggingface/datasets/downloads/extracted/'
-TRAIN_ROOT = HUGGINGFACE_ROOT + '592effd0a12bf1cf783adc699d189209f861ae414612ba8fd21c2927d955e588/data/TRAIN'
-TEST_ROOT = HUGGINGFACE_ROOT + '592effd0a12bf1cf783adc699d189209f861ae414612ba8fd21c2927d955e588/data/TEST'
+HUGGINGFACE_ROOT = '/home/yangwang/.cache/huggingface/datasets/downloads/extracted/592effd0a12bf1cf783adc699d189209f861ae414612ba8fd21c2927d955e588/'
+WIN_HUGGINGFACE_ROOT = ''
+TRAIN_ROOT = HUGGINGFACE_ROOT + 'data/TRAIN'
+TEST_ROOT = HUGGINGFACE_ROOT + 'data/TEST'
 
 
 def parse_config():
