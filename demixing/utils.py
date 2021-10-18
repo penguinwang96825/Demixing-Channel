@@ -96,3 +96,4 @@ def zero_padding(seq, size, filler=0):
     1. https://stackoverflow.com/a/30475648
     """
     return list(itertools.islice(itertools.chain(seq, itertools.repeat(filler)), size))
+

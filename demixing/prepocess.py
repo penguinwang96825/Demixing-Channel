@@ -58,14 +58,8 @@ def main():
         'train': train_data, 
         'test': test_data
     }
-    with open(f'./data/step_one_trn{trn_seg}_tst{tst_seg}.pkl', 'wb') as f:
+    with open(f'./data/trn{trn_seg}_tst{tst_seg}.pkl', 'wb') as f:
         pickle.dump(step_one_data, f)
-
-
-def test():
-    arr = [i for i in range(10)]
-    lst = contiguous_slice(arr, 5, 2)
-    print(lst)
 
 
 if __name__ == '__main__':
