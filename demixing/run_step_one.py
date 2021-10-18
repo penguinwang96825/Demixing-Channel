@@ -1,4 +1,5 @@
 import pickle
+from torch.utils.data import DataLoader
 from dataset import StepOneDataset
 from os.path import dirname
 from pathlib import Path
@@ -13,6 +14,8 @@ def main():
     path = f'./data/trn{trn_seg}_tst{tst_seg}.pkl'
     train_ds = StepOneDataset(path, CONFIG, state='train')
     test_ds = StepOneDataset(path, CONFIG, state='test')
+    train_dl = DataLoader(train_ds, shuffle=True)
+    test_dl = DataLoader(test_ds, shuffle=False)
 
 
 if __name__ == '__main__':
