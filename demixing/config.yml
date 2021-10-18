@@ -1,0 +1,25 @@
+# General configuration
+debug: False
+plot: False
+save_embedding: False
+
+# Neural network configuration
+epoch: 5
+batch: 256
+num_workers: 2
+lr: 1e-4
+dropout: 0.2
+
+# Step one configuration
+train_segments: 20
+test_segments: 10
+sr: 16000
+mfcc: 20
+discard: True
+padding: 'repeat'
+
+# Step two configuration
+train_mix: 10
+test_mix: 1
+snr: 5
+demixing: 'sub'
