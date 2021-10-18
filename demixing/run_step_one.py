@@ -12,7 +12,7 @@ def main():
     tst_seg = CONFIG['test_segments']
     path = f'./data/trn{trn_seg}_tst{tst_seg}.pkl'
     train_ds = StepOneDataset(path, CONFIG, state='train')
-    print(train_ds[:5])
+    test_ds = StepOneDataset(path, CONFIG, state='test')
 
 
 if __name__ == '__main__':
