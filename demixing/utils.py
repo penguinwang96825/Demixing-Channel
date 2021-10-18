@@ -19,11 +19,14 @@ def compute_mfcc(waveforms, n_mfcc, sr=16000):
     """
     mfccs = []
     for wav in tqdm(waveforms, desc='MFCC', leave=False):
-        # feature = python_speech_features.mfcc(wav, 
-        #                                       samplerate=sr, 
-        #                                       numcep=n_mfcc, 
-        #                                       nfft=int(sr*0.025))
-        feature = librosa.feature.mfcc(wav, sr=sr, n_mfcc=n_mfcc)
+        feature = librosa.feature.mfcc(
+            wav, 
+            sr=sr, 
+            n_mfcc=n_mfcc, 
+            n_fft=int(sr*0.025), 
+            hop_length=int(sr*0.01)
+        )
+        feature = feature.T[:-1, :]
         mfccs.append(feature)
     return np.array(mfccs)
 
