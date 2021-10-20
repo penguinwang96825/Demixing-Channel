@@ -11,8 +11,8 @@ lr: 1e-4
 dropout: 0.2
 
 # Step one configuration
-train_segments: 20
-test_segments: 10
+train_segments: 1
+test_segments: 1
 sr: 16000
 mfcc: 20
 discard: True
