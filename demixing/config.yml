@@ -6,22 +6,20 @@ save_embedding: False
 ####################################
 ### Neural network configuration ###
 ####################################
-epoch: 10
+epoch: 100
 batch: 256
 num_workers: 2
 lr: 0.0001
 dropout: 0.2
-test_size: 0.2
+test_split: 0.2
 
 ##############################
 ### Step one configuration ###
 ##############################
-train_segments: 1
-test_segments: 1
+train_segments: 20
+test_segments: 10
 sr: 16000
 mfcc: 20
-discard: True     # Whether discard wavform which is shorter than 1 second
-padding: 'repeat' # padding {'repeat', 'zero'}
 
 ##############################
 ### Step two configuration ###
@@ -30,3 +28,4 @@ train_mix: 10
 test_mix: 1
 snr: 5
 demixing: 'sub'
+padding: 'repeat' # padding {'repeat', 'zero'}

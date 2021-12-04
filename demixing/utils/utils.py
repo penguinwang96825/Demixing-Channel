@@ -1,4 +1,5 @@
 import os
+import torch
 import random
 import librosa
 import itertools
@@ -6,11 +7,25 @@ import numpy as np
 from tqdm.auto import tqdm
 
 
+EPS = 1e-8
+
+
+def seed_everything(seed=914):
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
 def compute_mfcc(waveforms, n_mfcc, sr=16000):
     """
     Parameters
     ----------
-    waveforms: List[np.ndarray]
+    data: List[np.ndarray]
         A list of waveform np.array.
     n_mfcc: int
         The number of cepstrum to return.
@@ -28,7 +43,10 @@ def compute_mfcc(waveforms, n_mfcc, sr=16000):
         )
         feature = feature.T[:-1, :]
         mfccs.append(feature)
-    return np.array(mfccs)
+    mfccs = np.array(mfccs)
+    # Balance the spectrum and improve the Signal-to-Noise (SNR)
+    # mfccs -= (np.mean(mfccs, axis=0) + EPS)
+    return mfccs
 
 
 def contiguous_slice(sequence, windows, num_samples, seed=914):
@@ -41,27 +59,17 @@ def contiguous_slice(sequence, windows, num_samples, seed=914):
     return sub_lst
 
 
-def pad_sequences(
-        sequences, 
-        maxlen=None, 
-        padding='zero', 
-        value=None, 
-        batch=False
-    ):
+def pad_sequences(sequences, maxlen=None, padding='zero', batch=False):
     if not batch:
         if padding == 'zero':
-            seq = np.array(value_padding(sequences, maxlen, filler=0))
-        if padding == 'value':
-            seq = np.array(value_padding(sequences, maxlen, filler=value))
+            seq = np.array(zero_padding(sequences, maxlen, filler=0))
         if padding == "repeat":
             seq = np.array(repeat_padding(sequences, maxlen))
         return seq
     pad_seq = []
     for seq in sequences:
         if padding == 'zero':
-            seq = np.array(value_padding(seq, maxlen, filler=0))
-        if padding == 'value':
-            seq = np.array(value_padding(seq, maxlen, filler=value))
+            seq = np.array(zero_padding(seq, maxlen, filler=0))
         if padding == "repeat":
             seq = np.array(repeat_padding(seq, maxlen))
         pad_seq.append(seq)
@@ -90,7 +98,7 @@ def repeat_padding(seq, size):
     return r[0][:size]
 
 
-def value_padding(seq, size, filler=0):
+def zero_padding(seq, size, filler=0):
     """
     Parameters
     ----------
@@ -110,6 +118,14 @@ def value_padding(seq, size, filler=0):
     1. https://stackoverflow.com/a/30475648
     """
     return list(itertools.islice(itertools.chain(seq, itertools.repeat(filler)), size))
+
+
+def chunks(seq, n):
+    """
+    Yield successive n-sized chunks from seq
+    """
+    for i in range(0, len(seq), n):
+        yield seq[i:i + n]
 
 
 def check_dir(path):
