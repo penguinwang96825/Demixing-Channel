@@ -1,1 +1,7 @@
 librosa
+numpy
+pandas
+pickle
+scikit-learn
+torch
+tqdm
