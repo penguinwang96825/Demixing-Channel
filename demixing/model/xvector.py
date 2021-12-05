@@ -15,7 +15,7 @@ from demixing.engine.trainer import Trainer
 class Classifier(Trainer):
 
     def __init__(self, n_mfcc=20, embed_dim=512, dropout_p=0.1, num_classes=630):
-        super(Classifier).__init__()
+        super(Classifier, self).__init__()
         self.xvector = XVector(n_mfcc, dropout_p)
         self.classifier = nn.Sequential(OrderedDict([
             ('hidden', nn.Linear(embed_dim, 512)), 
@@ -29,6 +29,14 @@ class Classifier(Trainer):
         embed = self.xvector(x)
         logits = self.classifier(embed)
         return logits
+
+    def freeze_xvector(self):
+        for param in self.xvector.parameters():
+            param.requires_grad = False
+
+    def unfreeze_xvector(self):
+        for param in self.xvector.parameters():
+            param.requires_grad = True
 
     def extract_embedding(self, x):
         x = self.xvector(x)
