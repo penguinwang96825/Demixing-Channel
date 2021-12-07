@@ -131,3 +131,7 @@ def chunks(seq, n):
 def check_dir(path):
     if os.path.exists(path) is False:
         os.mkdir(path)
+
+
+def check_file_exist(file_path):
+    return os.path.exists(file_path)
