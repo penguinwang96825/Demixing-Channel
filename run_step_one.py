@@ -45,7 +45,7 @@ def main():
     ### Load speeches and labels ###
     ################################
 
-    build_timit_speaker_mapping()
+    # build_timit_speaker_mapping()
     train_lst, test_lst = read_timit_speaker_mapping()
     audio_files = [ele[0] for ele in train_lst] + [ele[0] for ele in test_lst]
     labels = [ele[1] for ele in train_lst] + [ele[1] for ele in test_lst]
@@ -63,7 +63,7 @@ def main():
 
     train_ds = SpeakerIdDataset(X_train, y_train, n_mfcc=CONFIG['mfcc'], sr=CONFIG['sr'], num_seg=CONFIG['train_segments'])
     test_ds = SpeakerIdDataset(X_test, y_test, n_mfcc=CONFIG['mfcc'], sr=CONFIG['sr'], num_seg=CONFIG['test_segments'])
-    train_ds, valid_ds = train_test_dataset(train_ds, test_split=0.1)
+    train_ds, valid_ds = train_test_dataset(train_ds, test_split=0.01)
     train_dl = DataLoader(train_ds, batch_size=CONFIG['batch'], shuffle=True, num_workers=0, pin_memory=True)
     valid_dl = DataLoader(valid_ds, batch_size=CONFIG['batch'], shuffle=False, num_workers=0, pin_memory=True)
     test_dl = DataLoader(test_ds, batch_size=CONFIG['batch'], shuffle=False, num_workers=0, pin_memory=True)
@@ -87,7 +87,16 @@ def main():
     print(f"Accuracy after averaging: {acc:.4f}")
     model.plot()
 
-    embeddings = model.encode_batch(test_dl, gpu=True)
+    # embeddings = model.encode_batch(test_dl, gpu=True)
+    model.freeze_xvector()
+    model.fit(train_dl, valid_dataloader=None, max_epoch=10, gpu=True)
+    loss, acc = model.evaluate(test_dl)
+    print(f"Accuracy before averaging: {acc:.4f}")
+    y_proba = model.predict_proba(test_dl)
+    y_proba = [np.mean(p, axis=0) for p in chunks(y_proba, CONFIG['test_segments'])]
+    y_pred = np.array(y_proba).argmax(-1)
+    acc = metrics.accuracy_score(y_test, y_pred)
+    print(f"Accuracy after averaging: {acc:.4f}")
 
 
 if __name__ == '__main__':
